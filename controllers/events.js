@@ -2,15 +2,14 @@ const { response } = require('express');
 const Event = require('../models/Event');
 
 const getEvents = async (request, res = response) => {
-  const { uid } = request.body;
+  const events = await Event.find().populate('user', 'name');
 
-  let events = await Event.find({ user: uid }).populate('user', 'name');
-
-  res.status(200).json([events]);
+  res.status(200).json({ events });
 };
 
 const createEvent = async (request, res = response) => {
-  const { title, notes, start, end, uid } = request.body;
+  const { title, notes, start, end } = request.body;
+  const { uid } = request;
 
   const event = new Event({ title, notes, start, end });
   event.user = uid;
@@ -27,7 +26,7 @@ const createEvent = async (request, res = response) => {
 
 const updateEvent = async (request, res = response) => {
   const eventId = request.params.id;
-  const { uid } = request.body;
+  const { uid } = request;
 
   try {
     const event = await Event.findById(eventId);
@@ -55,7 +54,7 @@ const updateEvent = async (request, res = response) => {
 
 const deleteEvent = async (request, res = response) => {
   const eventId = request.params.id;
-  const { uid } = request.body;
+  const { uid } = request;
 
   try {
     const event = await Event.findById(eventId);

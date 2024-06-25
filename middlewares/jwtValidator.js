@@ -12,8 +12,8 @@ const jwtValidator = (request, res = response, next) => {
 
   try {
     const { uid, name } = jwt.verify(token, process.env.SECRET_JWT_SEED);
-    request.body.uid = uid;
-    request.body.name = name;
+    request.uid = uid;
+    request.name = name;
   } catch (error) {
     return res.status(401).json({
       message: 'Invalid token',
